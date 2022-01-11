@@ -2,20 +2,37 @@ import {
   Button,
   Card,
   FormControl,
-  FormHelperText,
   FormLabel,
   Paper,
   TextField,
   Typography,
 } from "@mui/material";
 import { Formik } from "formik";
-import React from "react";
-import { useNavigate } from "react-router-dom";
-
 import * as yup from "yup";
 
 const Login = () => {
-  let navigate = useNavigate();
+  const LoginSchema = yup.object().shape({
+    password: yup
+      .string()
+      .required("Required!")
+      .min(6, "Password must be more them six character!"),
+    email: yup.string().email().required("Required!"),
+  });
+  const authUser = (user) => {
+    
+    let userInfo = JSON.parse(localStorage.getItem("userInfo"));
+    console.log(userInfo);
+    const { email, password } = userInfo;
+    if (user.email == email) {
+      if (user.password == password) {
+        alert("user succesfully login");
+      } else {
+        alert("passoword does not match ");
+      }
+    } else {
+      alert("email does not exist");
+    }
+  };
 
   return (
     <div>
@@ -30,29 +47,12 @@ const Login = () => {
         }}
       >
         <Formik
-          initialValues={{
-            username: "",
-            email: "",
-            password: "",
-          }}
+          initialValues={{ email: "", password: "" }}
+          validationSchema={LoginSchema}
           onSubmit={async (values, { resetForm }) => {
-            let data = JSON.stringify(values.username);
-            localStorage.setItem("username", data);
-
-            navigate("/");
+            const user =await authUser(values);
             resetForm({});
           }}
-          validationSchema={yup.object().shape({
-            password: yup
-              .string()
-              .required("Required!")
-              .min(2, "Password must be more them two character!"),
-            email: yup.string().email().required("Required!"),
-            username: yup
-              .string()
-              .required("Required!")
-              .min(3, "Username must be more them three character!"),
-          })}
         >
           {({ values, errors, touched, handleSubmit, handleChange }) => {
             return (
@@ -74,19 +74,6 @@ const Login = () => {
                   }}
                 >
                   <FormControl>
-                    <FormLabel>User Name</FormLabel>
-                    <TextField
-                      error={Boolean(touched.username && errors.username)}
-                      helperText={touched.username && errors.username}
-                      id="username"
-                      type="text"
-                      name="username"
-                      variant="standard"
-                      value={values.username}
-                      onChange={handleChange}
-                    />
-                  </FormControl>
-                  <FormControl>
                     <FormLabel>Email</FormLabel>
                     <TextField
                       error={Boolean(touched.email && errors.email)}
@@ -99,8 +86,9 @@ const Login = () => {
                       onChange={handleChange}
                     />
                   </FormControl>
+
                   <FormControl>
-                    <FormLabel>Passwprd</FormLabel>
+                    <FormLabel>Password</FormLabel>
                     <TextField
                       error={Boolean(touched.password && errors.password)}
                       helperText={touched.password && errors.password}
@@ -117,7 +105,7 @@ const Login = () => {
                     variant="contained"
                     style={{ marginTop: "10px" }}
                   >
-                    Submit
+                    Login
                   </Button>
                 </form>
               </Card>
@@ -128,4 +116,5 @@ const Login = () => {
     </div>
   );
 };
+
 export default Login;

@@ -13,7 +13,7 @@ export const Home = () => {
     localStorage.removeItem("username");
     setName();
   };
-  
+
   return (
     <div
       style={{ display: "flex", alignItems: "center", flexDirection: "column" }}
