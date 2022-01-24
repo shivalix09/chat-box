@@ -23,8 +23,8 @@ const Login = () => {
     let userInfo = JSON.parse(localStorage.getItem("userInfo"));
     console.log(userInfo);
     const { email, password } = userInfo;
-    if (user.email == email) {
-      if (user.password == password) {
+    if (user.email === email) {
+      if (user.password === password) {
         alert("user succesfully login");
       } else {
         alert("passoword does not match ");
@@ -50,7 +50,7 @@ const Login = () => {
           initialValues={{ email: "", password: "" }}
           validationSchema={LoginSchema}
           onSubmit={async (values, { resetForm }) => {
-            const user =await authUser(values);
+            await authUser(values);
             resetForm({});
           }}
         >
