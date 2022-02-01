@@ -2,10 +2,24 @@ import { Delete } from "@mui/icons-material";
 import { Button, Collapse, IconButton, List, ListItem, ListItemText, Paper, Stack, TextField, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { TransitionGroup } from "react-transition-group";
+import {db} from "../../firebase";
 
 
+                                  
 export const Home = () => {
-  
+  const [todosList, setTodosList] = useState([]);
+  const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    // .orderBy('timestamp','asc')
+    db.collection('messages').onSnapshot(messages => {
+      console.log(...messages.docs.map(doc => doc.data()));
+      setTodosList(messages.docs.map(doc => doc.data().message))
+    
+      // console.log("hello jayveer....",snapshot.docs.map(doc => doc.data()))
+    })
+  }, []);
+  console.log("todosList",todosList);                      
   const [name, setName] = useState();
   useEffect(() => {
     setName(JSON.parse(localStorage.getItem("username")));
@@ -16,8 +30,7 @@ export const Home = () => {
   //   setName();
   // };
 
-  const [todosList, setTodosList] = useState([]);
-  const [message, setMessage] = useState("");
+
   const handleAddMessage = () => {
     // const nextHiddenItem = todos.find((i) => !todosList.includes(i));
     // if (nextHiddenItem) {
