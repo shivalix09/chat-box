@@ -10,10 +10,32 @@ import {
 import { Formik } from "formik";
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 import * as yup from "yup";
 
 const Register = () => {
   let navigate = useNavigate();
+
+  const authUser = (user) => {
+    const { email, password } = user;
+    const auth = getAuth();
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        var user = userCredential.user;
+        if (user) {
+          let data = JSON.stringify(email);
+          localStorage.setItem("userInfo", data);
+          navigate("/login");
+        }
+        console.log("userCredential", userCredential);
+      })
+      .catch((error) => {
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        console.log("errorCode", errorCode);
+        console.log("errorMessage", errorMessage);
+      });
+  };
 
   return (
     <div>
@@ -38,7 +60,7 @@ const Register = () => {
           onSubmit={async (values, { resetForm }) => {
             let data = JSON.stringify(values);
             localStorage.setItem("userInfo", data);
-
+            await authUser(values);
             navigate("/login");
             resetForm({});
           }}

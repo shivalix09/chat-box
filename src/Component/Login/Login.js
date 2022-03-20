@@ -9,29 +9,41 @@ import {
 } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
+  let navigate = useNavigate();
+
   const LoginSchema = yup.object().shape({
     password: yup
       .string()
       .required("Required!")
       .min(6, "Password must be more them six character!"),
     email: yup.string().email().required("Required!"),
-  });
-  const authUser = (user) => {
-    
-    let userInfo = JSON.parse(localStorage.getItem("userInfo"));
-    console.log(userInfo);
-    const { email, password } = userInfo;
-    if (user.email === email) {
-      if (user.password === password) {
-        alert("user succesfully login");
-      } else {
-        alert("passoword does not match ");
-      }
-    } else {
-      alert("email does not exist");
-    }
+    });
+   const authUser = (user) => {
+    const { email, password } = user;
+    const auth = getAuth();
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        var user = userCredential.user;
+        if (user) {
+          const {email, accessToken} = user;  
+          console.log("user",user);
+          let data = JSON.stringify({email, accessToken});
+          localStorage.setItem("userInfo", data);
+          navigate("/chatscreen");
+          
+        }
+        console.log("userCredential", userCredential);
+      })
+      .catch((error) => {
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        console.log("errorCode", errorCode);
+        console.log("errorMessage", errorMessage);
+      });
   };
 
   return (
