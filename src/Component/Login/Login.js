@@ -9,8 +9,13 @@ import {
 } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
+import { useHistory } from "react-router-dom";
+import { auth } from "../../firebase";
+import { setToken, setUserInfo } from "../../Helper";
 
 const Login = () => {
+  let history = useHistory();
+
   const LoginSchema = yup.object().shape({
     password: yup
       .string()
@@ -18,20 +23,29 @@ const Login = () => {
       .min(6, "Password must be more them six character!"),
     email: yup.string().email().required("Required!"),
   });
+
   const authUser = (user) => {
-    
-    let userInfo = JSON.parse(localStorage.getItem("userInfo"));
-    console.log(userInfo);
-    const { email, password } = userInfo;
-    if (user.email === email) {
-      if (user.password === password) {
-        alert("user succesfully login");
-      } else {
-        alert("passoword does not match ");
-      }
-    } else {
-      alert("email does not exist");
-    }
+    const { email, password } = user;
+    auth
+      .signInWithEmailAndPassword(email, password)
+      .then((userCredential) => {
+        var user = userCredential.user;
+        if (user) {
+          const { email, refreshToken } = user;
+
+          const Username = email;
+
+          history.push("/chatScreen", Username);
+
+          setToken(JSON.stringify(refreshToken));
+          setUserInfo(JSON.stringify(email));
+          history.push("/chatscreen");
+        }
+      })
+      .catch((error) => {
+        var errorCode = error.code;
+        var errorMessage = error.message;
+      });
   };
 
   return (

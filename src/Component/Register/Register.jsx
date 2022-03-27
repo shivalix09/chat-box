@@ -9,11 +9,30 @@ import {
 } from "@mui/material";
 import { Formik } from "formik";
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import * as yup from "yup";
+import { auth } from "../../firebase";
 
 const Register = () => {
-  let navigate = useNavigate();
+  let history = useHistory();
+
+  const authUser = (user) => {
+    const { email, password } = user;
+    auth
+      .createUserWithEmailAndPassword(email, password)
+      .then((userCredential) => {
+        var user = userCredential.user;
+        if (user) {
+          let data = JSON.stringify(email);
+          localStorage.setItem("userInfo", data);
+          history.push("/login");
+        }
+      })
+      .catch((error) => {
+        var errorCode = error.code;
+        var errorMessage = error.message;
+      });
+  };
 
   return (
     <div>
@@ -38,8 +57,8 @@ const Register = () => {
           onSubmit={async (values, { resetForm }) => {
             let data = JSON.stringify(values);
             localStorage.setItem("userInfo", data);
-
-            navigate("/login");
+            authUser(values);
+            history.push("/login");
             resetForm({});
           }}
           validationSchema={yup.object().shape({

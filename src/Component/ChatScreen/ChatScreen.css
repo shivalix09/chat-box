@@ -1,0 +1,46 @@
+/* text box */
+.App_form {
+  padding: 10px 0px;
+  position: fixed;
+  bottom: 0px;
+  z-index: 1;
+  background-color: #e7e7e7;
+  width: 100%;
+}
+
+.App_form_control {
+  display: flex !important;
+  flex-direction: row !important;
+}
+
+/* welcome label */
+.Main-div {
+  background-color: rgb(255, 255, 255);
+  width: 800px;
+  min-height: 100vh;
+}
+
+.user {
+  margin-left: auto;
+  width: fit-content;
+  padding: 5px 10px;
+  border-radius: 3px;
+  width: fit-content;
+  margin-bottom: 2%;
+}
+.guestuser {
+  margin-right: auto;
+  width: fit-content;
+  padding: 5px 10px;
+  border-radius: 3px;
+  width: fit-content;
+  margin-bottom: 2%;
+}
+.user-msg {
+  background-color: #e9e9eb;
+  color: black;
+}
+.guestuser-msg {
+  background-color: #0b81ff;
+  color: white;
+}

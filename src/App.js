@@ -1,22 +1,25 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { Home } from "./Component/Home/Home";
-import Login  from "./Component/Login/Login";
-import Register from "./Component/Register/Register";
-
+import { BrowserRouter, Switch, Route } from "react-router-dom";
+import routes from "./route";
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route exact path="/" element={<Home />} />
-        
-      </Routes>
-    </Router>
-    
-  
+    <div>
+      <BrowserRouter>
+        <Switch>
+          {routes.map((route, index) => {
+            return (
+              <Route
+                key={index}
+                exact
+                path={route.path}
+                component={route.hoc(route.component)}
+              />
+            );
+          })}
+        </Switch>
+      </BrowserRouter>
+    </div>
   );
 }
 
