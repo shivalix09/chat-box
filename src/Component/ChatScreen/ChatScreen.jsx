@@ -58,7 +58,7 @@ export const ChatScreen = () => {
           onChange={(e) => {
             setMessage(e.target.value);
           }}
-          style={{ width: "90%", backgroundColor: "white" }}
+          style={{ width: "100%",maxWidth:"800px" ,backgroundColor: "white" }}
         />
 
         <IconButton
@@ -108,9 +108,9 @@ export const ChatScreen = () => {
         </a>
         {addMessageButton}
 
-        <Paper elevation={2} style={{ width: "100%", margin: "auto" }}>
+        <Paper elevation={2} style={{ width: "100%", margin: "auto", height:"100vh", display:"flex", alignItems:"center", justifyContent:"center"}}>
           {todosList.length > 0 ? (
-            <List style={{ marginBottom: "80px" }}>
+            <List style={{ marginBottom: "80px", width:"100%"}}>
               <TransitionGroup>
                 {todosList.map((item, index) => {
                   return (
